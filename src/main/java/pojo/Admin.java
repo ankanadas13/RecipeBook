@@ -152,9 +152,9 @@ public class Admin implements java.io.Serializable {
 	}
 
 	public void getAdminById() {
-		System.out.println(selectedID);
 		AdminDAO dao = new AdminDAO();
-		Admin k = dao.getAdminById(this);
+		this.idadmin = this.selectedID;
+		Admin k = dao.getAdminById(this.idadmin);
 		setIdadmin(k.idadmin);
 		setEmail(k.email);
 		setUsername(k.username);
@@ -200,7 +200,6 @@ public class Admin implements java.io.Serializable {
 		} else {
 			return "login";
 		}
-
 	}
 
 	public void clearAll() {

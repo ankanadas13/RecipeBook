@@ -16,13 +16,15 @@ public class AdminDAO {
 	private static Transaction tx;
 
 	public void addNewAdmin(Admin admin) {
+		Session session = sf.openSession();
 		try {
-			Session session = sf.openSession();
 			tx = session.beginTransaction();
 			session.save(admin);
 			tx.commit();
 		} catch (Exception e) {
 			System.out.println(e);
+		} finally {
+			session.close();
 		}
 	}
 
@@ -34,9 +36,10 @@ public class AdminDAO {
 			Query q = session.createQuery("from Admin");
 			admin = q.list();
 			tx.commit();
-			session.close();
 		} catch (Exception e) {
 			System.out.println(e);
+		} finally {
+			session.close();
 		}
 		return admin;
 	}
@@ -46,12 +49,9 @@ public class AdminDAO {
 		List<Admin> admin = null;
 		try {
 			tx = session.beginTransaction();
-
 			Query q = session.createQuery("select idadmin from Admin");
 			admin = q.list();
-
 			tx.commit();
-
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
@@ -60,66 +60,47 @@ public class AdminDAO {
 		return admin;
 	}
 
-	public Admin getAdminById(Admin admin) {
+	public Admin getAdminById(int idadmin) {
 		Session session = sf.openSession();
-		try {
-			tx = session.beginTransaction();
-
-			Query q = session.createQuery("from Admin where idadmin = :id");
-			q.setParameter("id", admin.getSelectedID());
-			admin = (Admin) q.uniqueResult();
-
-			tx.commit();
-
-		} catch (Exception e) {
-			System.out.println(e);
-		} finally {
-			session.close();
-		}
-		return admin;
-	}
-	
-	public String getAdminNameById(int idadmin) {
-		Session session = sf.openSession();
-		Admin admin = new Admin();
+		Admin admin = null;
 		try {
 			tx = session.beginTransaction();
 			Query q = session.createQuery("from Admin where idadmin = :id");
 			q.setParameter("id", idadmin);
 			admin = (Admin) q.uniqueResult();
-
 			tx.commit();
-
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
 			session.close();
 		}
-		return admin.getFullname();
+		return admin;
 	}
 
 	public void updateAdmin(Admin admin) {
+		Session session = sf.openSession();
 		try {
-			Session session = sf.openSession();
 			tx = session.beginTransaction();
 			System.out.println(admin);
 			session.update(admin);
-
 			tx.commit();
 		} catch (Exception e) {
 			System.out.println(e);
+		} finally {
+			session.close();
 		}
 	}
 
 	public void deleteAdmin(Admin admin) {
+		Session session = sf.openSession();
 		try {
-			Session session = sf.openSession();
 			tx = session.beginTransaction();
 			session.delete(admin);
-
 			tx.commit();
 		} catch (Exception e) {
 			System.out.println(e);
+		} finally {
+			session.close();
 		}
 	}
 	
@@ -128,24 +109,36 @@ public class AdminDAO {
 		List<Admin> list = new ArrayList<Admin>();
 		try {
 			tx = session.beginTransaction();
-
 			Query q = session.createQuery("from Admin where username = :uname and password = :pass and status = :status");
 			q.setParameter("uname", admin.getUsername());
 			q.setParameter("pass", admin.getPassword());
 			q.setParameter("status", "Aktif");
 			list = q.list();
-			
 			tx.commit();
-
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
 			session.close();
 		}
 		return list;
-		
 	}
 	
+	public Admin getAdminLastRecord() {
+		Session session = sf.openSession();
+		Admin admin = null;
+		try {
+			tx = session.beginTransaction();
+			Query q = session.createQuery("from Admin order by idadmin DESC");
+			q.setMaxResults(1);
+			admin = (Admin) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			session.close();
+		}
+		return admin;
+	}
 
 	public AdminDAO() {
 

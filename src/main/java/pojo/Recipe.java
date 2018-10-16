@@ -179,18 +179,6 @@ public class Recipe implements java.io.Serializable {
 	public void setImgpath(String imgpath) {
 		this.imgpath = imgpath;
 	}
-	public List<Recipe> getAllNameImgRecipe(){
-		RecipeDAO dao = new RecipeDAO();
-		List<Object[]> nameImage = dao.getAllNameImgRecipe();
-		List<Recipe> list= new ArrayList<Recipe>();
-		for (Object[] temp : nameImage) {
-			Recipe obj = new Recipe();
-			obj.setName(String.valueOf(temp[0]));
-			obj.setImgpath(String.valueOf(temp[1]));
-			list.add(obj);
-		}
-		return list;
-	} 
 	
 	public void addRecipe() {
 		RecipeDAO dao = new RecipeDAO();
@@ -212,7 +200,8 @@ public class Recipe implements java.io.Serializable {
 
 	public void getRecipeById() {
 		RecipeDAO dao = new RecipeDAO();
-		Recipe k = dao.getRecipeById(this);
+		setIdrecipe(selectedID);
+		Recipe k = dao.getRecipeById(idrecipe);
 		setCategory(k.category);
 		setDifficulty(k.difficulty);
 		setDirections(k.directions);
@@ -281,7 +270,7 @@ public class Recipe implements java.io.Serializable {
 		} else {
 			setImgpath(doUpload());
 		}
-		setIdadmin(this.currentAdmin);
+//		setIdadmin(this.currentAdmin);
 		dao.updateRecipe(this);
 		clearAll();
 	}
@@ -295,7 +284,8 @@ public class Recipe implements java.io.Serializable {
 	
 	public String getAdminNameById() {
 		AdminDAO dao = new AdminDAO();
-		return dao.getAdminNameById(idadmin);
+		Admin admin = dao.getAdminById(idadmin);
+		return admin.getFullname();
 	}
 	
 	public void clearAll() {
