@@ -99,5 +99,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionmanagement>
+		<repository>
+			<id>releases</id>
+			<url>http://ec2-3-14-251-87.us-east-2.compute.amazonaws.com:8080/nexus/content/repositories/devopstraining</url>
+		</repository>
+		</distributionmanagement>
 
 </project>
